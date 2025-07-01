@@ -1,0 +1,503 @@
+definitions:
+  controllers.ApproveRequest:
+    properties:
+      amount:
+        type: string
+      jwt:
+        type: string
+      owner:
+        type: string
+      spender:
+        type: string
+    type: object
+  controllers.BalanceResponse:
+    properties:
+      address:
+        type: string
+      balance:
+        type: string
+    type: object
+  controllers.BurnRequest:
+    properties:
+      address:
+        type: string
+      amount:
+        type: string
+      jwt:
+        type: string
+    type: object
+  controllers.CreateAddCoOwnerEventRequest:
+    properties:
+      jwt:
+        type: string
+      newCoOwner:
+        type: string
+    type: object
+  controllers.CreateAddCoOwnerEventResponse:
+    properties:
+      eventId:
+        type: string
+      status:
+        type: string
+      transactionHash:
+        type: string
+    type: object
+  controllers.CreateBurnTokenEventRequest:
+    properties:
+      amount:
+        type: string
+      jwt:
+        type: string
+    type: object
+  controllers.CreateBurnTokenEventResponse:
+    properties:
+      eventId:
+        type: string
+      status:
+        type: string
+      transactionHash:
+        type: string
+    type: object
+  controllers.CreateMintEventRequest:
+    properties:
+      amount:
+        type: string
+      jwt:
+        type: string
+    type: object
+  controllers.CreateMintEventResponse:
+    properties:
+      eventId:
+        type: string
+      status:
+        type: string
+      transactionHash:
+        type: string
+    type: object
+  controllers.CreatePauseEventRequest:
+    properties:
+      jwt:
+        type: string
+    type: object
+  controllers.CreatePauseEventResponse:
+    properties:
+      eventId:
+        type: string
+      status:
+        type: string
+      transactionHash:
+        type: string
+    type: object
+  controllers.CreateUnpauseEventRequest:
+    properties:
+      jwt:
+        type: string
+    type: object
+  controllers.CreateUnpauseEventResponse:
+    properties:
+      eventId:
+        type: string
+      status:
+        type: string
+      transactionHash:
+        type: string
+    type: object
+  controllers.ErrorResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  controllers.LoginUserRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  controllers.RegisterUserRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  controllers.SignEventRequest:
+    properties:
+      approve:
+        type: boolean
+      eventId:
+        type: string
+      jwt:
+        type: string
+    type: object
+  controllers.SignEventResponse:
+    properties:
+      status:
+        type: string
+      transactionHash:
+        type: string
+    type: object
+  controllers.TransferRequest:
+    properties:
+      amount:
+        type: string
+      from:
+        type: string
+      jwt:
+        type: string
+      to:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /approve:
+    post:
+      consumes:
+      - application/json
+      description: Phê duyệt số lượng token cho địa chỉ chi tiêu
+      parameters:
+      - description: Thông tin phê duyệt token
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.ApproveRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Yêu cầu không hợp lệ
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Phê duyệt token
+      tags:
+      - tokens
+  /balances/{address}:
+    get:
+      consumes:
+      - application/json
+      description: Lấy số dư token của một địa chỉ Ethereum
+      parameters:
+      - description: Địa chỉ Ethereum
+        in: path
+        name: address
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.BalanceResponse'
+        "400":
+          description: Yêu cầu không hợp lệ
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Lấy số dư token
+      tags:
+      - tokens
+  /burn:
+    post:
+      consumes:
+      - application/json
+      description: Đốt một số lượng token từ địa chỉ chỉ định
+      parameters:
+      - description: Thông tin đốt token
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.BurnRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Yêu cầu không hợp lệ
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Đốt token
+      tags:
+      - tokens
+  /events/add-co-owner:
+    post:
+      consumes:
+      - application/json
+      description: Tạo sự kiện để thêm một đồng sở hữu mới
+      parameters:
+      - description: Thông tin yêu cầu thêm đồng sở hữu
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateAddCoOwnerEventRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.CreateAddCoOwnerEventResponse'
+        "400":
+          description: Yêu cầu không hợp lệ
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "403":
+          description: Lỗi xử lý sự kiện
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Tạo sự kiện thêm đồng sở hữu
+      tags:
+      - events
+  /events/burn:
+    post:
+      consumes:
+      - application/json
+      description: Tạo sự kiện để đốt token với số lượng chỉ định
+      parameters:
+      - description: Thông tin yêu cầu đốt token
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateBurnTokenEventRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.CreateBurnTokenEventResponse'
+        "400":
+          description: Yêu cầu không hợp lệ
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "403":
+          description: Lỗi xử lý sự kiện
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Tạo sự kiện đốt token
+      tags:
+      - events
+  /events/mint:
+    post:
+      consumes:
+      - application/json
+      description: Tạo một sự kiện mint token với số lượng chỉ định
+      parameters:
+      - description: Thông tin yêu cầu mint
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateMintEventRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.CreateMintEventResponse'
+        "400":
+          description: Yêu cầu không hợp lệ
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "403":
+          description: Lỗi xử lý sự kiện
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Tạo sự kiện mint token
+      tags:
+      - events
+  /events/pause:
+    post:
+      consumes:
+      - application/json
+      description: Tạo sự kiện để tạm dừng hoạt động hợp đồng
+      parameters:
+      - description: Thông tin yêu cầu tạm dừng
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreatePauseEventRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.CreatePauseEventResponse'
+        "400":
+          description: Yêu cầu không hợp lệ
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "403":
+          description: Lỗi xử lý sự kiện
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Tạo sự kiện tạm dừng
+      tags:
+      - events
+  /events/sign:
+    post:
+      consumes:
+      - application/json
+      description: Ký hoặc từ chối một sự kiện hiện có
+      parameters:
+      - description: Thông tin yêu cầu ký
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.SignEventRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.SignEventResponse'
+        "400":
+          description: Yêu cầu không hợp lệ
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "403":
+          description: Lỗi xử lý sự kiện
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Ký sự kiện
+      tags:
+      - events
+  /events/unpause:
+    post:
+      consumes:
+      - application/json
+      description: Tạo sự kiện để bỏ tạm dừng hoạt động hợp đồng
+      parameters:
+      - description: Thông tin yêu cầu bỏ tạm dừng
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.CreateUnpauseEventRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.CreateUnpauseEventResponse'
+        "400":
+          description: Yêu cầu không hợp lệ
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "403":
+          description: Lỗi xử lý sự kiện
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Tạo sự kiện bỏ tạm dừng
+      tags:
+      - events
+  /transfer:
+    post:
+      consumes:
+      - application/json
+      description: Thực hiện chuyển token từ địa chỉ này sang địa chỉ khác
+      parameters:
+      - description: Thông tin chuyển token
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.TransferRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Yêu cầu không hợp lệ
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Chuyển token
+      tags:
+      - tokens
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Xác thực người dùng với email và mật khẩu để lấy JWT
+      parameters:
+      - description: Thông tin đăng nhập
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.LoginUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Xác thực không thành công
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Đăng nhập người dùng
+      tags:
+      - users
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Tạo tài khoản mới với email, mật khẩu và tên
+      parameters:
+      - description: Thông tin đăng ký
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.RegisterUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Yêu cầu không hợp lệ
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Đăng ký người dùng mới
+      tags:
+      - users
+swagger: "2.0"

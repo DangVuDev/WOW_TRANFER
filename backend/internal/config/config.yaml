@@ -3,5 +3,5 @@ INFURA_URL: "https://mainnet.infura.io/v3/63e5a7b11d7d456bb061f1135b7ddc88"
 MONGODB_URI: "mongodb://localhost:27017/wowtoken"
 REDIS_ADDR: "localhost:6379"
 JWT_SECRET: "your-jwt-secret"
-ENCRYPTION_KEY: "32-byte-encryption-key"
-CONTRACT_ADDRESS: "0xYourContractAddress"
+ENCRYPTION_KEY: "wowtoken-32-byte-secret-key-1234"
+CONTRACT_ADDRESS: 0x60bE01e70194737cf25553E6C3411e1a50d8F663

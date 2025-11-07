@@ -6,14 +6,12 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"wowtoken-api/internal/config"
 	"wowtoken-api/internal/helpers"
 	"wowtoken-api/internal/models"
 	"wowtoken-api/pkg/db"
 )
 
-const (
-	encryptionKey = "32-byte-encryption-key" // Nên di chuyển vào config.yaml trong sản xuất
-)
 
 // GenerateEthCredentials tạo địa chỉ Ethereum và khóa riêng ngẫu nhiên
 func GenerateEthCredentials() (address, privateKey string, err error) {
@@ -28,6 +26,7 @@ func GenerateEthCredentials() (address, privateKey string, err error) {
 
 // RegisterUser đăng ký người dùng mới
 func RegisterUser(email, password, name string) (string, string, error) {
+	cfg, _ := config.LoadConfig()
 	// Kiểm tra đầu vào
 	if email == "" || !helpers.IsValidEmail(email) {
 		return "", "", errors.New("email không hợp lệ")
@@ -51,7 +50,7 @@ func RegisterUser(email, password, name string) (string, string, error) {
 	}
 
 	// Mã hóa khóa riêng
-	encryptedKey, err := helpers.EncryptPrivateKey(privateKey, encryptionKey)
+	encryptedKey, err := helpers.EncryptPrivateKey(privateKey, cfg.EncryptionKey)
 	if err != nil {
 		return "", "", fmt.Errorf("lỗi mã hóa khóa riêng: %v", err)
 	}

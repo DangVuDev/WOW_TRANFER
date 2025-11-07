@@ -8,6 +8,7 @@ import (
 	"wowtoken-api/internal/middleware"
 	"wowtoken-api/internal/services"
     _ "wowtoken-api/cmd/api/docs"
+	"github.com/gorilla/handlers" // ← Thêm import này
 	"github.com/gorilla/mux"
 	httpSwagger "github.com/swaggo/http-swagger"
 )
@@ -50,9 +51,17 @@ func main() {
 	// Thêm Swagger UI (có thể để public hoặc bảo vệ tùy ý)
 	router.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
-	// Khởi động server
+	// ← Thêm CORS middleware ở đây (áp dụng cho toàn bộ router)
+	corsHandler := handlers.CORS(
+		handlers.AllowedOrigins([]string{"*"}), // Hoặc chỉ định origins cụ thể, ví dụ: []string{"http://localhost:3000"}
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization", "X-Requested-With"}),
+		handlers.AllowCredentials(), // Nếu cần cookies/auth
+	)(router)
+
+	// Khởi động server với CORS handler
 	log.Printf("Khởi động server tại :%s", cfg.Port)
-	if err := http.ListenAndServe(":"+cfg.Port, router); err != nil {
+	if err := http.ListenAndServe(":"+cfg.Port, corsHandler); err != nil {
 		log.Fatalf("Server thất bại: %v", err)
 	}
 }
